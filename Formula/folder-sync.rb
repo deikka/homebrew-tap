@@ -1,0 +1,54 @@
+class FolderSync < Formula
+  desc "Incremental folder backup to external drives with macOS menu bar app"
+  homepage "https://github.com/deikka/folder-sync"
+  url "https://github.com/deikka/folder-sync/archive/refs/tags/v1.0.0.tar.gz"
+  sha256 "f6dcc7df036d4f23b59ce402f0fd32a1566b8f2f8e5ff4ba4732d6f8f49d6250"
+  license "MIT"
+
+  depends_on :macos
+  depends_on xcode: ["12.0", :build]
+
+  def install
+    # Compile Swift app
+    system "swiftc", "-O", "-o", "BackupMenu",
+           "app/main.swift", "-framework", "Cocoa"
+
+    # Create .app bundle
+    app_dir = prefix/"BackupMenu.app/Contents"
+    (app_dir/"MacOS").mkpath
+    (app_dir/"Resources").mkpath
+    (app_dir/"MacOS").install "BackupMenu"
+    (app_dir).install "app/Info.plist"
+
+    # Install backup script
+    bin.install "scripts/backup-dev-apps.sh" => "folder-sync-backup"
+
+    # Install LaunchAgent template
+    (share/"folder-sync").install "scripts/com.alex.backup-dev-apps.plist" => "launchagent.plist"
+  end
+
+  def post_install
+    # Create data directories
+    (var/"folder-sync").mkpath
+  end
+
+  def caveats
+    <<~EOS
+      Para empezar:
+
+      1. Abrir la app de menu de barra:
+           open #{opt_prefix}/BackupMenu.app
+
+      2. Configurar origen, destino y horario desde "Ajustes..." en el menu
+
+      3. Para arranque automatico con el sistema:
+           osascript -e 'tell application "System Events" to make login item at end with properties {path:"#{opt_prefix}/BackupMenu.app", hidden:true}'
+
+      4. macOS pedira permisos de acceso al volumen externo la primera vez
+
+      Backup manual por terminal:
+        folder-sync-backup          # incremental
+        folder-sync-backup --full   # copia completa
+    EOS
+  end
+end
