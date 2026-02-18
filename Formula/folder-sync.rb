@@ -30,19 +30,27 @@ class FolderSync < Formula
   def post_install
     # Create data directories
     (var/"folder-sync").mkpath
+
+    # Symlink to ~/Applications for Spotlight/Launchpad/open -a
+    user_apps = Pathname.new(Dir.home)/"Applications"
+    user_apps.mkpath
+    app_link = user_apps/"BackupMenu.app"
+    app_link.unlink if app_link.symlink? || app_link.exist?
+    app_link.make_symlink(opt_prefix/"BackupMenu.app")
   end
 
   def caveats
     <<~EOS
       Para empezar:
 
-      1. Abrir la app de menu de barra:
-           open #{opt_prefix}/BackupMenu.app
+      1. Abrir la app (cualquiera de estas formas):
+           open -a BackupMenu
+           Spotlight: Cmd+Space → "BackupMenu"
 
       2. Configurar origen, destino y horario desde "Ajustes..." en el menu
 
       3. Para arranque automatico con el sistema:
-           osascript -e 'tell application "System Events" to make login item at end with properties {path:"#{opt_prefix}/BackupMenu.app", hidden:true}'
+           osascript -e 'tell application "System Events" to make login item at end with properties {path:"#{Dir.home}/Applications/BackupMenu.app", hidden:true}'
 
       4. macOS pedira permisos de acceso al volumen externo la primera vez
 
