@@ -1,8 +1,8 @@
 class FolderSync < Formula
   desc "Incremental folder backup to external drives with macOS menu bar app"
   homepage "https://github.com/deikka/folder-sync"
-  url "https://github.com/deikka/folder-sync/archive/refs/tags/v1.2.0.tar.gz"
-  sha256 "e9edee80753b6b9e188b56d831720f91d866e4650cb5a7a687a41cd56327a434"
+  url "https://github.com/deikka/folder-sync/archive/refs/tags/v1.3.0.tar.gz"
+  sha256 "095a5d135c517667fb1d6f6560ddeba910646f075bee7df16c8261a662f24fde"
   license "MIT"
 
   depends_on :macos
@@ -12,11 +12,15 @@ class FolderSync < Formula
     system "swiftc", "-O", "-o", "BackupMenu",
            "app/main.swift", "-framework", "Cocoa"
 
+    # Generate app icon
+    system "bash", "scripts/generate-icon.sh", buildpath.to_s
+
     # Create .app bundle
     app_dir = prefix/"BackupMenu.app/Contents"
     (app_dir/"MacOS").mkpath
     (app_dir/"Resources").mkpath
     (app_dir/"MacOS").install "BackupMenu"
+    (app_dir/"Resources").install "AppIcon.icns"
     (app_dir).install "app/Info.plist"
 
     # Install backup script
