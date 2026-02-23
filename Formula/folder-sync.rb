@@ -30,9 +30,11 @@ class FolderSync < Formula
     # Create data directories
     (var/"folder-sync").mkpath
 
-    # Symlink to ~/Applications for Spotlight/Launchpad/open -a
+    # Copy to ~/Applications for Spotlight/Raycast/Launchpad
+    # Symlinks are not indexed by Spotlight, so we copy the bundle
     system "mkdir", "-p", "#{Dir.home}/Applications"
-    system "ln", "-sf", "#{opt_prefix}/BackupMenu.app", "#{Dir.home}/Applications/BackupMenu.app"
+    system "rm", "-rf", "#{Dir.home}/Applications/BackupMenu.app"
+    system "cp", "-R", "#{opt_prefix}/BackupMenu.app", "#{Dir.home}/Applications/BackupMenu.app"
   end
 
   def caveats
