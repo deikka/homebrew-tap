@@ -31,11 +31,8 @@ class FolderSync < Formula
     (var/"folder-sync").mkpath
 
     # Symlink to ~/Applications for Spotlight/Launchpad/open -a
-    user_apps = Pathname.new(Dir.home)/"Applications"
-    user_apps.mkpath
-    app_link = user_apps/"BackupMenu.app"
-    app_link.unlink if app_link.symlink? || app_link.exist?
-    app_link.make_symlink(opt_prefix/"BackupMenu.app")
+    system "mkdir", "-p", "#{Dir.home}/Applications"
+    system "ln", "-sf", "#{opt_prefix}/BackupMenu.app", "#{Dir.home}/Applications/BackupMenu.app"
   end
 
   def caveats
