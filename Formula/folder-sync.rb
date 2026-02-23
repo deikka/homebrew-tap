@@ -1,8 +1,8 @@
 class FolderSync < Formula
   desc "Incremental folder backup to external drives with macOS menu bar app"
   homepage "https://github.com/deikka/folder-sync"
-  url "https://github.com/deikka/folder-sync/archive/refs/tags/v1.1.0.tar.gz"
-  sha256 "c9a91d5ac3cb53e0b0cb7538a6bd97226a7fabe22f364ce06a88fe3348b0b101"
+  url "https://github.com/deikka/folder-sync/archive/refs/tags/v1.2.0.tar.gz"
+  sha256 "e9edee80753b6b9e188b56d831720f91d866e4650cb5a7a687a41cd56327a434"
   license "MIT"
 
   depends_on :macos
@@ -23,7 +23,7 @@ class FolderSync < Formula
     bin.install "scripts/backup-dev-apps.sh" => "folder-sync-backup"
 
     # Install LaunchAgent template
-    (share/"folder-sync").install "scripts/com.alex.backup-dev-apps.plist" => "launchagent.plist"
+    (share/"folder-sync").install "scripts/com.klab.folder-sync.plist" => "launchagent.plist"
   end
 
   def post_install
