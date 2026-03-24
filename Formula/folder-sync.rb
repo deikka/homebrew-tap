@@ -1,8 +1,8 @@
 class FolderSync < Formula
   desc "Incremental folder backup to external drives with macOS menu bar app"
   homepage "https://github.com/deikka/folder-sync"
-  url "https://github.com/deikka/folder-sync/archive/refs/tags/v1.6.0.tar.gz"
-  sha256 "0d443ee14b6aa33bc18b806b96aa4ba38cb0f82ba2d14cd94a708f6e3500791e"
+  url "https://github.com/deikka/folder-sync/archive/refs/tags/v1.6.1.tar.gz"
+  sha256 "d22229c0aa2b48795bd618dd4575be2b04dde4a15a0292b2b1577dc2381e7b65"
   license "MIT"
 
   depends_on :macos
