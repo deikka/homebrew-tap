@@ -21,16 +21,16 @@ class FolderSync < Formula
     (app_dir/"Resources").mkpath
     (app_dir/"MacOS").install "FolderSync"
     (app_dir/"Resources").install "AppIcon.icns"
-    (app_dir).install "app/Info.plist"
+    app_dir.install "app/Info.plist"
 
     # Install scripts
     bin.install "scripts/backup-dev-apps.sh" => "folder-sync-backup"
     bin.install "scripts/install-app.sh" => "folder-sync-install-app"
   end
 
-  def post_install
-    # Create data directories
-    (var/"folder-sync").mkpath
+  # Create data directories
+  post_install_steps do
+    mkdir_p "folder-sync", base: :var
   end
 
   def caveats
@@ -52,5 +52,10 @@ class FolderSync < Formula
         folder-sync-backup          # incremental
         folder-sync-backup --full   # copia completa
     EOS
+  end
+
+  test do
+    assert_predicate prefix/"FolderSync.app/Contents/MacOS/FolderSync", :executable?
+    system "bash", "-n", bin/"folder-sync-backup"
   end
 end
